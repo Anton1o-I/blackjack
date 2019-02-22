@@ -26,7 +26,7 @@ func dealerLogic(h []card, d []card, i int) ([]card, int) {
 			break
 		}
 		if s != true {
-			h = append(h, card{face: d[i].face, value: d[i].value})
+			h = append(h, card{face: d[i].face, value: d[i].value, suit: d[i].suit})
 			v = sumHand(h)
 			sort.Ints(v[:])
 			i++
