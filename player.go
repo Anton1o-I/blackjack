@@ -10,15 +10,15 @@ import (
 )
 
 //Player struct holds information on a single player
-type Player struct {
+type player struct {
 	name  string
 	money float64
-	cards []Card
+	cards []card
 }
 
 //AddPlayer function to add a player to a game
-func AddPlayer(scan *bufio.Reader) (Player, error) {
-	p := Player{}
+func addPlayer(scan *bufio.Reader) (player, error) {
+	p := player{}
 	fmt.Println("Player Name:")
 	n, err := scan.ReadString('\n')
 	if err != nil {
@@ -35,11 +35,11 @@ func AddPlayer(scan *bufio.Reader) (Player, error) {
 	if err != nil {
 		return p, err
 	}
-	p = Player{name: n, money: bf}
+	p = player{name: n, money: bf}
 	return p, nil
 }
 
-func wager(scan *bufio.Reader, p Player) (float64, error) {
+func wager(scan *bufio.Reader, p player) (float64, error) {
 	var w float64
 	fmt.Printf("%s, how much would you like to wager?\n", p.name)
 	v, err := scan.ReadString('\n')
@@ -56,7 +56,7 @@ func wager(scan *bufio.Reader, p Player) (float64, error) {
 }
 
 //PlaceBet takes a user input bet
-func PlaceBet(scan *bufio.Reader, p Player) (Player, float64, error) {
+func placeBet(scan *bufio.Reader, p player) (player, float64, error) {
 	var b float64
 	for {
 		wf, err := wager(scan, p)
@@ -79,9 +79,9 @@ func PlaceBet(scan *bufio.Reader, p Player) (Player, float64, error) {
 }
 
 //PlayerDecisions allows player to decide to hit or stand and makes calculations
-func PlayerDecisions(scan *bufio.Reader, p Player, d []Card, i int, dc []Card) (Player, int) {
+func playerDecisions(scan *bufio.Reader, p player, d []card, i int, dc []card) (player, int) {
 	for {
-		o, err := HandOptions(scan, p, dc)
+		o, err := handOptions(scan, p, dc)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -89,9 +89,9 @@ func PlayerDecisions(scan *bufio.Reader, p Player, d []Card, i int, dc []Card) (
 			break
 		}
 		if o == "hit" {
-			p, i = Hit(p, d, i)
+			p, i = hit(p, d, i)
 		}
-		cv := SumHand(p.cards)
+		cv := sumHand(p.cards)
 		sort.Ints(cv[:])
 		var bust bool
 		if cv[0] != 0 {
@@ -105,25 +105,25 @@ func PlayerDecisions(scan *bufio.Reader, p Player, d []Card, i int, dc []Card) (
 			}
 		}
 		if bust {
-			fmt.Printf("Bust %v ", SumHand(p.cards))
+			fmt.Printf("Bust %v ", sumHand(p.cards))
 			break
 		}
 	}
-	fmt.Println(p.name, "has", p.cards, "for total value of", SumHand(p.cards))
+	fmt.Println(p.name, "has", p.cards, "for total value of", sumHand(p.cards))
 	return p, i
 }
 
 //HandOptions are the user input for decisions they can make in the hand
-func HandOptions(scan *bufio.Reader, p Player, dc []Card) (string, error) {
+func handOptions(scan *bufio.Reader, p player, dc []card) (string, error) {
 	options := []string{"stand", "hit"}
 	var valid bool
 	var n string
 	for valid == false {
 		var err error
-		fmt.Printf("%s what do you want to do?\n Current Cards %v \nCurrent Value %v \n [Stand, Hit]\n Dealer Showing Card %v (value %v) \n",
+		fmt.Printf("\n %s what do you want to do? [Stand, Hit] \n Current Cards %v \nCurrent Value %v \n Dealer Showing Card %v (value %v) \n",
 			p.name,
 			p.cards,
-			SumHand(p.cards),
+			sumHand(p.cards),
 			dc[0].face,
 			dc[0].value,
 		)
@@ -147,7 +147,7 @@ func HandOptions(scan *bufio.Reader, p Player, dc []Card) (string, error) {
 }
 
 //AddFunds checks if a player wants to add money
-func AddFunds(scan *bufio.Reader, p Player) (Player, error) {
+func addFunds(scan *bufio.Reader, p player) (player, error) {
 	fmt.Println("You're out of money, do you want to add funds? [y,n]")
 	i, err := scan.ReadString('\n')
 	if err != nil {

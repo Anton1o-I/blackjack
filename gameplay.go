@@ -8,14 +8,14 @@ import (
 )
 
 //Hit adds a card to players hand
-func Hit(p Player, d []Card, i int) (Player, int) {
-	p.cards = append(p.cards, Card{value: d[i].value, suit: d[i].suit, face: d[i].face})
+func hit(p player, d []card, i int) (player, int) {
+	p.cards = append(p.cards, card{value: d[i].value, suit: d[i].suit, face: d[i].face})
 	i++
 	return p, i
 }
 
-// SumHand will take the sum of a players current hand
-func SumHand(h []Card) [2]int {
+// sumHand will take the sum of a players current hand
+func sumHand(h []card) [2]int {
 	var v [2]int
 	var b bool
 	for _, c := range h {
@@ -36,20 +36,20 @@ func SumHand(h []Card) [2]int {
 }
 
 //Table struct holds table information
-type Table struct {
+type table struct {
 	position int
-	player   Player
+	player   player
 }
 
 //BuildTable will add up to 6 players to start a game
-func BuildTable(scan *bufio.Reader) ([]Table, error) {
-	var t []Table
+func buildTable(scan *bufio.Reader) ([]table, error) {
+	var t []table
 	fmt.Println("Add First Player")
-	p, err := AddPlayer(scan)
+	p, err := addPlayer(scan)
 	if err != nil {
 		return t, err
 	}
-	t = append(t, Table{position: 1, player: p})
+	t = append(t, table{position: 1, player: p})
 	i := 1
 	for i < 6 {
 		fmt.Println("Add Player? [y/n]")
@@ -64,31 +64,31 @@ func BuildTable(scan *bufio.Reader) ([]Table, error) {
 		}
 		if n == "y" {
 			i++
-			p, err = AddPlayer(scan)
-			t = append(t, Table{position: i, player: p})
+			p, err = addPlayer(scan)
+			t = append(t, table{position: i, player: p})
 		}
 	}
 	return t, nil
 }
 
-//DealHands will run initial hands to players
-func DealHands(t []Table, d []Card, i int) (int, []Card) {
-	var dc []Card
+//dealHands will run initial hands to players
+func dealHands(t []table, d []card, i int) (int, []card) {
+	var dc []card
 	for j := 0; j < 2; j++ {
 		for k := range t {
-			t[k].player.cards = append(t[k].player.cards, Card{value: d[i].value, suit: d[i].suit, face: d[i].face})
+			t[k].player.cards = append(t[k].player.cards, card{value: d[i].value, suit: d[i].suit, face: d[i].face})
 			i++
 		}
-		dc = append(dc, Card{value: d[i].value, suit: d[i].suit, face: d[i].face})
+		dc = append(dc, card{value: d[i].value, suit: d[i].suit, face: d[i].face})
 		i++
 	}
 	return i, dc
 }
 
-//Payout determines payout per player
-func Payout(dv int, pc []Card, pb float64) float64 {
+//payout determines payout per player
+func payout(dv int, pc []card, pb float64) float64 {
 	var po float64
-	pa := SumHand(pc)
+	pa := sumHand(pc)
 	sort.Ints(pa[:])
 	var pv int
 	if pa[0] == 0 {

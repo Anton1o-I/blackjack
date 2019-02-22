@@ -6,8 +6,8 @@ import (
 	"github.com/pborman/uuid"
 )
 
-// Card is the struct for a single card in a deck
-type Card struct {
+// card is the struct for a single card in a deck
+type card struct {
 	id    string
 	value []int
 	face  string
@@ -32,30 +32,30 @@ var cardValues = map[string][]int{
 
 var suits = []string{"clubs", "spades", "hearts", "diamonds"}
 
-func genDeck() []Card {
-	var deck []Card
+func genDeck() []card {
+	var deck []card
 	for _, s := range suits {
 		for f, val := range cardValues {
-			c := Card{id: uuid.NewUUID().String(), value: val, face: f, suit: s}
+			c := card{id: uuid.NewUUID().String(), value: val, face: f, suit: s}
 			deck = append(deck, c)
 		}
 	}
 	return deck
 }
 
-//GenShoe builds a shoe with num amount of decks
-func GenShoe(num int) []Card {
+//genShoe builds a shoe with num amount of decks
+func genShoe(num int) []card {
 
-	var shoe []Card
+	var shoe []card
 	for i := 0; i < num; i++ {
 		shoe = append(shoe, genDeck()...)
 	}
 	return shoe
 }
 
-// Shuffle will shuffle a slice of Cards
-func Shuffle(s []Card) []Card {
-	dest := make([]Card, len(s))
+// shuffle will shuffle a slice of Cards
+func shuffle(s []card) []card {
+	dest := make([]card, len(s))
 	perm := rand.Perm(len(s))
 	for i, v := range perm {
 		dest[v] = s[i]

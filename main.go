@@ -15,37 +15,37 @@ type bets struct {
 }
 
 func main() {
-	var t []Table
+	var t []table
 	reader := bufio.NewReader(os.Stdin)
-	t, err := BuildTable(reader)
+	t, err := buildTable(reader)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	for {
 		var i int
-		d := GenShoe(6)
-		d = Shuffle(d)
+		d := genShoe(6)
+		d = shuffle(d)
 		cut := len(d) - (len(t) * 5)
 		for i < cut {
 			var b []float64
 			for p := range t {
 				var tb float64
-				t[p].player, tb, err = PlaceBet(reader, t[p].player)
+				t[p].player, tb, err = placeBet(reader, t[p].player)
 				if err != nil {
 					log.Fatal(err)
 				}
 				b = append(b, tb)
 			}
-			var dc []Card
-			i, dc = DealHands(t, d, i)
+			var dc []card
+			i, dc = dealHands(t, d, i)
 			for p := range t {
-				var np Player
-				np, i = PlayerDecisions(reader, t[p].player, d, i, dc)
+				var np player
+				np, i = playerDecisions(reader, t[p].player, d, i, dc)
 				t[p].player = np
 			}
-			dc, i = DealerLogic(dc, d, i)
-			ds := SumHand(dc)
+			dc, i = dealerLogic(dc, d, i)
+			ds := sumHand(dc)
 			sort.Ints(ds[:])
 			var dv int
 			if ds[0] != 0 {
@@ -60,16 +60,16 @@ func main() {
 				dv = ds[1]
 			}
 			for j := range t {
-				po := Payout(dv, t[j].player.cards, b[j])
+				po := payout(dv, t[j].player.cards, b[j])
 				t[j].player.money = t[j].player.money + po
 			}
-			fmt.Println(t)
 			for p := range t {
-				t[p].player.cards = []Card{}
+				fmt.Println("\n", t[p].player.name, "has $", t[p].player.money, "available")
+				t[p].player.cards = []card{}
 			}
 			for p := range t {
 				if t[p].player.money == 0 {
-					t[p].player, err = AddFunds(reader, t[p].player)
+					t[p].player, err = addFunds(reader, t[p].player)
 					if err != nil {
 						log.Fatal()
 					}
