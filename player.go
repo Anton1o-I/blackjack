@@ -163,7 +163,7 @@ func addFunds(scan *bufio.Reader, p player) (player, error) {
 		if err != nil {
 			return p, err
 		}
-		m = strings.TrimRight(i, "\r\n")
+		m = strings.TrimRight(m, "\r\n")
 		mf, err := strconv.ParseFloat(m, 64)
 		if err != nil {
 			return p, err

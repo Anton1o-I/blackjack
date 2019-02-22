@@ -71,7 +71,7 @@ func main() {
 				if t[p].player.money == 0 {
 					t[p].player, err = addFunds(reader, t[p].player)
 					if err != nil {
-						log.Fatal()
+						log.Fatal(err)
 					}
 					if t[p].player.money == 0 {
 						fmt.Printf("Thanks for playing %s !", t[p].player.name)
