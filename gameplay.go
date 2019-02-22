@@ -95,7 +95,7 @@ func payout(dv int, pc []card, pb float64) float64 {
 		pv = pa[1]
 	}
 	if pa[0] != 0 {
-		if pa[1] < 21 {
+		if pa[1] <= 21 {
 			pv = pa[1]
 		}
 		if pa[1] > 21 {
