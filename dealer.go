@@ -13,12 +13,12 @@ func dealerLogic(h []card, d []card, i int) ([]card, int) {
 	for {
 		fmt.Println("Dealer has", h, v)
 		if v[0] != 0 {
-			if v[0] > 16 && v[1] > 16 {
+			if v[0] > 17 && v[1] > 17 {
 				s = true
 			}
 		}
 		if v[0] == 0 {
-			if v[1] > 16 {
+			if v[1] > 17 {
 				s = true
 			}
 		}
